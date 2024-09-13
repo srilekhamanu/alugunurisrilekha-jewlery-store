@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page - Sterling Silver Necklace</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        header {
+            background-color: #602c55;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        header nav ul li {
+            margin-right: 20px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            display: flex;
+        }
+
+        .search-bar input {
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .search-bar button {
+            padding: 5px;
+            background-color: #ca9696;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .user-options a {
+         color: white;
+         text-decoration: none;
+          margin-left: 15px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .product {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: #b12704;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-buttons button {
+            padding: 10px 15px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .add-to-cart {
+            background-color: #fbbc5e;
+            color: white;
+        }
+
+        .buy-now {
+            background-color: #964040;
+            color: white;
+        }
+        .buy-now a{
+            text-decoration: none;
+            color: white;
+        }
+        .reviews-section {
+            margin-top: 30px;
+        }
+
+        .reviews-section h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .review {
+            background-color: #f1f1f1;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .review p {
+            margin: 0;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .review-form button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+     <script>
+        // Example array of products
+        let products = [
+        { name: "Sterling Silver Necklace with Amethyst Pendant", material: "Sterling Silver", price: 1500, category: "necklace" },
+            {name: "Gold-Plated Bracelet with Emerald", material: "Gold-Plated", price: 3200, category: "bracelet" },
+            { name: "Rose Gold Earrings with Diamonds", material: "Rose Gold", price: 5000, category: "earrings" },
+            { name: "Platinum Ring with Sapphire", material: "Platinum", price: 7500, category: "rings" },
+            // Add more products as needed
+        ];
+
+        function displayCart() {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    let cartContainer = document.getElementById('cartItems');
+    let totalPrice = 0;
+
+    cartContainer.innerHTML = '';
+    cartItems.forEach((item, index) => {
+        cartContainer.innerHTML += `
+            <div class="cart-item">
+                <img src="${item.image}" alt="${item.name}">
+                <div class="cart-item-info">
+                    <h3>${item.name}</h3>
+                    <p>Price: Rs. ${item.price}/-</p>
+                </div>
+                <button class="remove-button" onclick="removeItem(${index})">Remove</button>
+            </div>
+        `;
+        totalPrice += item.price;
+    });
+
+    document.getElementById('totalPrice').innerText = totalPrice;
+}
+
+        
+
+        function addToCart(name, price, image) {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    cartItems.push({ name, price, image });  // Include the image in the cart item
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    alert(`${name} has been added to your cart!`);
+}
+
+
+        function sortProducts() {
+            const sortOption = document.getElementById('sortOptions').value;
+
+            if (sortOption === 'title') {
+                products.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (sortOption === 'price') {
+                products.sort((a, b) => a.price - b.price);
+            }
+
+            displayProducts(products);
+        }
+
+        function filterProducts() {
+            const filterCategory = document.getElementById('filterCategory').value;
+            let filteredProducts = products;
+
+            if (filterCategory !== 'all') {
+                filteredProducts = products.filter(product => product.category === filterCategory);
+            }
+
+            displayProducts(filteredProducts);
+        }
+    </script>
+</head>
+<body>
+     <!-- Header -->
+     <header>
+        <div class="logo">Jewelry</div>
+        <nav>
+            <ul>
+                <li><a href="page.html">Home</a></li>
+                <li><a href="product page.html">Product</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Search for jewelry...">
+            <button>Search</button>
+        </div>
+        <div class="user-options">
+            <a href="registration.html">Register</a>
+            <a href="login.html">Login</a>
+            <a href="cart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="product">
+            <div class="product-image">
+                <img src="images/images1.jpeg" alt="Golden Ivy Bracelet ">
+            </div>
+            <div class="product-details">
+                <h1 class="product-title">Golden Ivy Bracelet</h1>
+                <p class="product-price">Rs.5500/-</p>
+                <p class="product-description">
+                    A stunning piece featuring intricately designed gold-plated ivy leaves that wrap gracefully around the wrist. Elegant and versatile, this bracelet adds a touch of sophistication to any outfit. Adjustable for a perfect fit.
+                </p>
+                <div class="product-buttons">
+                    <button class="add-to-cart" onclick="addToCart('Golden Ivy Bracelet', 5500,'images/images1.jpeg')">Add to Cart</button>
+                    <button class="buy-now">
+                        <a href="payment.html">Buy Now</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-section">
+            <h3>Customer Reviews</h3>
+
+            <div class="review">
+                <p><strong>Rachel W:</strong>"Unique and pretty! The ivy design and emerald make it a standout piece in my collection." </p>
+            </div>
+
+            <div class="review">
+                <p><strong>Amanda H:</strong>"Perfect gift! My sister adores it and wears it daily. The design is simply beautiful." </p>
+            </div>
+
+            <div class="review-form">
+                <h3>Leave a Review</h3>
+                <textarea id="review-text" rows="4" placeholder="Write your review here..."></textarea>
+                <button onclick="submitReview()">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function submitReview() {
+            let reviewText = document.getElementById("review-text").value;
+            if (reviewText.trim() !== "") {
+                let reviewsSection = document.querySelector(".reviews-section");
+                let newReview = document.createElement("div");
+                newReview.classList.add("review");
+                newReview.innerHTML = `<p><strong>Your Review:</strong> ${reviewText}</p>`;
+                reviewsSection.insertBefore(newReview, reviewsSection.querySelector(".review-form"));
+                document.getElementById("review-text").value = ""; // Clear the textarea
+            } else {
+                alert("Please write a review before submitting.");
+            }
+        }
+    </script>
+</body>
+</html>

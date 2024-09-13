@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewelry Store</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #da9e9e;
+        }
+        header {
+            background-color: #6d3b3b;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo a {
+            text-decoration: none;
+            color: #fff;
+        }
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        header nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        header nav ul li {
+            margin-right: 20px;
+        }
+        header nav ul li a {
+            color: rgb(255, 254, 254);
+            text-decoration: none;
+        }
+        .user-options a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .jewelry-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .jewelry-item {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex: 1 1 calc(30% - 30px);
+            box-sizing: border-box;
+            max-width: 300px;
+            text-align: center;
+        }
+        .jewelry-image img {
+    max-width: 100%;
+    border-radius: 8px;
+    height: 250px;
+    transition: transform 0.3s ease; 
+}
+
+.jewelry-image img:hover {
+    transform: scale(1.1); 
+}
+        .jewelry-name {
+            font-size: 1.2em;
+            margin: 10px 0;
+            color: #333;
+        }
+        .jewelry-material {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .jewelry-price {
+            font-size: 1.1em;
+            color: #b12704;
+            margin-bottom: 10px;
+        }
+        .jewelry-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .jewelry-buttons button {
+            padding: 8px 12px;
+            font-size: 0.9em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+        }
+        .add-to-cart {
+            background-color: #e3bc81;
+            color: white;
+        }
+        .buy-now {
+            background-color: #7f4141;
+            color: white;
+        }
+        .buy-now a {
+            text-decoration: none;
+            color: white;
+        }
+        .filter-sort {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .filter-sort select {
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const products = [
+    { name: 'Sterling Silver Necklace with Amethyst Pendant', price: 1500, material: 'Silver', category: 'necklace', image: 'path_to_image/necklace.jpg', element: document.querySelector('.jewelry-item:nth-child(1)') },
+    { name: 'Gold-Plated Bracelet with Emerald', price: 3200, material: 'Gold', category: 'bracelet', image: 'path_to_image/bracelet.jpg', element: document.querySelector('.jewelry-item:nth-child(2)') },
+    { name: 'Rose Gold Earrings with Diamonds', price: 5000, material: 'Gold', category: 'earrings', image: 'path_to_image/earrings.jpg', element: document.querySelector('.jewelry-item:nth-child(3)') },
+    { name: 'Platinum Ring with Sapphire', price: 7500, material: 'Platinum', category: 'rings', image: 'path_to_image/ring.jpg', element: document.querySelector('.jewelry-item:nth-child(4)') },
+    { name: 'Golden Ivy Bracelet', price: 5500, material: 'Gold', category: 'bracelet', image: 'path_to_image/golden_bracelet.jpg', element: document.querySelector('.jewelry-item:nth-child(5)') },
+    { name: 'Ruby Heart Pendant on Gold Chain', price: 1999, material: 'Gold', category: 'necklace', image: 'path_to_image/ruby_heart.jpg', element: document.querySelector('.jewelry-item:nth-child(6)') },
+    { name: 'Diamond Infinity Bracelet', price: 7000, material: 'Diamond', category: 'bracelet', image: 'path_to_image/diamond_bracelet.jpg', element: document.querySelector('.jewelry-item:nth-child(7)') },
+    { name: 'Rose Quartz Butterfly Earrings', price: 2999, material: 'Quartz', category: 'earrings', image: 'path_to_image/quartz_earrings.jpg', element: document.querySelector('.jewelry-item:nth-child(8)') },
+    { name: 'Topaz Sunburst Ring', price: 2500, material: 'Topaz', category: 'rings', image: 'path_to_image/topaz_ring.jpg', element: document.querySelector('.jewelry-item:nth-child(9)') },
+    { name: 'Ruby Blossom Necklace', price: 3999, material: 'Ruby', category: 'necklace', image: 'path_to_image/ruby_necklace.jpg', element: document.querySelector('.jewelry-item:nth-child(10)') }
+];
+
+            
+
+            const sortOptions = document.getElementById('sortOptions');
+            const filterCategory = document.getElementById('filterCategory');
+
+            sortOptions.addEventListener('change', function () {
+                const sortBy = sortOptions.value;
+                let sortedProducts = [...products];
+
+                if (sortBy === 'name') {
+                    sortedProducts.sort((a, b) => a.name.localeCompare(b.name));
+                } else if (sortBy === 'price') {
+                    sortedProducts.sort((a, b) => a.price - b.price);
+                }
+
+                const jewelryGrid = document.querySelector('.jewelry-grid');
+                jewelryGrid.innerHTML = ''; // Clear the current grid
+
+                // Re-append sorted products
+                sortedProducts.forEach(product => {
+                    jewelryGrid.appendChild(product.element);
+                });
+            });
+
+            filterCategory.addEventListener('change', function () {
+                const category = filterCategory.value;
+                products.forEach(product => {
+                    if (category === 'all' || product.category === category) {
+                        product.element.style.display = 'block';
+                    } else {
+                        product.element.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        function addToCart(name, price ,image) {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            cartItems.push({ name, price,image });
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            alert(name + ' has been added to your cart!');
+        }
+
+
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo"><a href="page.html">Jewelry Collection</a></div>
+        <nav>
+            <ul>
+                <li><a href="page.html">Home</a></li>
+                <li><a href="product.html">Product</a></li>
+                <li><a href="about.html">About us</a></li>
+                <li><a href="contact.html">Contact us</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Search for jewelry...">
+            <button>Search</button>
+        </div>
+        <div class="user-options">
+            <a href="registration.html">Register</a>
+            <a href="login.html">Login</a>
+            <a href="cart.html" class="cart-icon">Cart</a>
+        </div>
+    </header>
+
+    <div class="filter-sort">
+        <select id="sortOptions">
+            <option value="name">Sort by Name</option>
+            <option value="price">Sort by Price</option>
+        </select>
+
+        <select id="filterCategory">
+            <option value="all">All Categories</option>
+            <option value="necklace">Necklaces</option>
+            <option value="bracelet">Bracelets</option>
+            <option value="earrings">Earrings</option>
+            <option value="rings">Rings</option>
+        </select>
+    </div>
+
+    <h1>Product Page</h1>
+
+    <div class="jewelry-grid">
+        <!-- Jewelry Item 1 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product1.html">
+                    <img src="images/il_1080xN.2447457754_ghau.webp" alt="Sterling Silver Necklace with Amethyst Pendant">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Sterling Silver Necklace with Amethyst Pendant</h2>
+            <p class="jewelry-price">Rs.1,500/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Sterling Silver Necklace with Amethyst Pendant', 1500,'images/il_1080xN.2447457754_ghau.webp')">Add to Cart</button>
+                <button class="buy-now"><a href="product1.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 2 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product2.html">
+                    <img src="images/p385082_2.webp" alt="Gold-Plated Bracelet with Emerald">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Gold-Plated Bracelet with Emerald</h2>
+            <p class="jewelry-price">Rs.3,200/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Gold-Plated Bracelet with Emerald', 3200,'images/p385082_2.webp')">Add to Cart</button>
+                <button class="buy-now"><a href="product2.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 3 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product3.html">
+                    <img src="images/968f0595a2fcd426170a99f186c9be93.jpg" alt="Rose Gold Earrings with Diamonds">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Rose Gold Earrings with Diamonds</h2>
+            <p class="jewelry-price">Rs.5,000/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Rose Gold Earrings with Diamonds', 5000,'images/968f0595a2fcd426170a99f186c9be93.jpg')">Add to Cart</button>
+                <button class="buy-now"><a href="product3.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 4 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product4.html">
+                    <img src="images/14288a.jpg" alt="Platinum Ring with Sapphire">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Platinum Ring with Sapphire</h2>
+            <p class="jewelry-price">Rs.7,500/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Platinum Ring with Sapphire', 7500,'images/14288a.jpg')">Add to Cart</button>
+                <button class="buy-now"><a href="product4.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 5 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product5.html">
+                    <img src="images/images1.jpeg" alt="Golden Ivy Bracelet">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Golden Ivy Bracelet</h2>
+            <p class="jewelry-price">Rs.5,500/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Golden Ivy Bracelet', 5500,'images/images1.jpeg')">Add to Cart</button>
+                <button class="buy-now"><a href="product5.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 6 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product6.html">
+                    <img src="images/ruby heart.jpeg" alt="Ruby Heart Pendant on Gold Chain">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Ruby Heart Pendant on Gold Chain</h2>
+            <p class="jewelry-price">Rs.1999/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Ruby Heart Pendant on Gold Chain', 1999,'images/ruby heart.jpeg')">Add to Cart</button>
+                <button class="buy-now"><a href="product6.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 7 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product7.html">
+                    <img src="images/diamond infinty.jpeg" alt="Diamond Infinity Bracelet">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Diamond Infinity Bracelet</h2>
+            <p class="jewelry-price">Rs.7000/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Diamond Infinity Bracelet', 7000,'images/diamond infinty.jpeg')">Add to Cart</button>
+                <button class="buy-now"><a href="product7.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 8 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product8.html">
+                    <img src="images/aurura deam.webp" alt="Aurora Dreams Drops">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Aurora Dreams Drops</h2>
+            <p class="jewelry-price">Rs.2999/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Aurora Dreams Drops', 2999,'images/aurura deam.webp')">Add to Cart</button>
+                <button class="buy-now"><a href="product8.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 9 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product9.html">
+                    <img src="images/topaz ring.webp" alt="Topaz Sunburst Ring">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Topaz Sunburst Ring</h2>
+            <p class="jewelry-price">Rs.2500/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Topaz Sunburst Ring', 2500,'images/topaz ring.webp')">Add to Cart</button>
+                <button class="buy-now"><a href="product9.html">Buy Now</a></button>
+            </div>
+        </div>
+
+        <!-- Jewelry Item 10 -->
+        <div class="jewelry-item">
+            <div class="jewelry-image">
+                <a href="product10.html">
+                    <img src="images/ruby necklace.webp" alt="Ruby Blossom Necklace">
+                </a>
+            </div>
+            <h2 class="jewelry-name">Ruby Blossom Necklace</h2>
+            <p class="jewelry-price">Rs.3999/-</p>
+            <div class="jewelry-buttons">
+                <button class="add-to-cart" onclick="addToCart('Ruby Blossom Necklace', 3999,'images/ruby necklace.webp')">Add to Cart</button>
+                <button class="buy-now"><a href="product10.html">Buy Now</a></button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
